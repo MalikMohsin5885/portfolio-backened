@@ -7,7 +7,17 @@ async function bootstrap() {
 
   // Enable CORS directly with NestJS
   app.enableCors({
-    origin: 'https://mohsinrasheed.vercel.app', // Ensure no trailing slash
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'https://mohsinrasheed.vercel.app',
+        'https://mohsinrasheed.vercel.app/',
+      ];
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
