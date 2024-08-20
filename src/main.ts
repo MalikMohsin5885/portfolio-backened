@@ -7,9 +7,18 @@ async function bootstrap() {
 
   // Enable CORS directly with NestJS
   app.enableCors({
-    origin: 'https://mohsinrasheed.vercel.app/', // Removed trailing slash
+    origin: 'https://mohsinrasheed.vercel.app', // Ensure no trailing slash
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+  });
+
+  // Handle preflight requests
+  app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(204);
+    } else {
+      next();
+    }
   });
 
   app.useGlobalPipes(new ValidationPipe());
